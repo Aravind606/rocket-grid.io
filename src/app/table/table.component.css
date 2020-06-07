@@ -1,0 +1,137 @@
+table {
+  width: 100%;
+}
+
+.example-container {
+  overflow: auto;
+}
+
+th.mat-sort-header-sorted {
+  color: red;
+}
+
+th {
+  background-color: lightslategrey;
+}
+
+.heading {
+  color: white;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+header {
+  height: 60px;
+  width: 100%;
+  background: lightskyblue;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+}
+
+body {
+  margin: 0px;
+}
+
+#container {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+}
+
+#nav {
+  width: 60px;
+  height: 623px;
+  background: rgb(135, 171, 250);
+  /* position: fixed; */
+}
+
+#body {
+  display: grid;
+  grid-template-rows: 60px 1fr;
+  top: 68px;
+  left: 68px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+#bodyheader {
+  margin-left: 8px;
+  margin-right: 8px;
+  background-color: #f8f9fa;
+  position: relative;
+  top: 68px
+}
+
+.title {
+  margin-top: 16px;
+}
+
+/* .filter-box {
+  margin-left: 40px;
+} */
+
+.table1 {
+  margin-top: 4px;
+  position: relative;
+  top: 68px;
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-bottom: 8px;
+  height: 460px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.table2 {
+  margin-top: 4px;
+  position: relative;
+  top: 68px;
+  display: grid;
+  grid-template-columns: 0.7fr 0.3fr;
+  margin-bottom: 8px;
+  height: 460px;
+  margin-left: 8px;
+}
+
+#content {
+  overflow: auto;
+}
+
+button {
+  position: absolute;
+  right: 88px;
+  top: 20px;
+}
+
+.table-heading {
+  color: white;
+}
+
+#filteropt {
+  margin-left: 8px;
+  margin-right: 8px;
+  background-color: turquoise;
+  color: white;
+}
+
+.filter-heading {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.filter-col {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+.filter-data {
+  margin-left: 40px;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 25px;
+}
+
+h3 {
+  display: inline-block;
+  margin-left: 25px;
+}

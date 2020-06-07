@@ -1,0 +1,59 @@
+<body class="mat-typography">
+  <div id="container">
+    <header>
+      <h1 class="heading">Rocket Grid</h1>
+    </header>
+    <div id="nav">
+    </div>
+    <div id="body">
+      <div id="bodyheader">
+        <h1 class="title">User Details</h1>
+        <button type="button" (click)=toggleDisplayDivIf() class="btn btn-primary filter-box">FILTER</button>
+      </div>
+      <div [ngClass]="{'table1':tnormal,'table2':tchange}">
+        <div id="content">
+          <table mat-table [dataSource]="tableData" matSort>
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="table-heading"> ID </th>
+              <td mat-cell *matCellDef="let data"> {{data.id}} </td>
+            </ng-container>
+            <ng-container matColumnDef="fname">
+              <th mat-header-cell *matHeaderCellDef class="table-heading"> First Name </th>
+              <td mat-cell *matCellDef="let data"> {{data.First_name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="lname">
+              <th mat-header-cell *matHeaderCellDef class="table-heading"> Last Name </th>
+              <td mat-cell *matCellDef="let data"> {{data.Last_name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="city">
+              <th mat-header-cell *matHeaderCellDef class="table-heading"> City </th>
+              <td mat-cell *matCellDef="let data"> {{data.City}} </td>
+            </ng-container>
+            <ng-container matColumnDef="country">
+              <th mat-header-cell *matHeaderCellDef class="table-heading"> Country </th>
+              <td mat-cell *matCellDef="let data"> {{data.Country}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+        <div id="filteropt" *ngIf="isShowDivIf">
+          <h1 class="filter-heading">Filter By Name and Country</h1>
+          <h2 class="filter-col">First Name</h2>
+          <div class="filter-data" *ngFor="let names of nameFilter">
+            <input type="checkbox" (click)="filterName($event,'First_name')" [checked]=names.filtered
+              value={{names.name}}>
+            {{names.name}}
+            <br>
+          </div>
+          <h2 class="filter-col">Country</h2>
+          <div class="filter-data" *ngFor="let country of countryFilter">
+            <input type="checkbox" (click)="filterCountry($event,'Country')" [checked]=country.filtered
+              value={{country.name}}> {{country.name}} <br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <h1>welvoghiikjuu</h1> -->
+</body>
