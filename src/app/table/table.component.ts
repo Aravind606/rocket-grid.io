@@ -18,7 +18,7 @@ export class TableComponent implements OnInit {
   isShowDivIf = false;
   tnormal = true;
   tchange = false;
-  // totalData;
+  totalData;
   nameFilter = [{
     name: "Hilde",
     filtered: false
@@ -103,180 +103,29 @@ export class TableComponent implements OnInit {
     filtered: false
   },
   ];
-  totalData = [{
-    "id": 15,
-    "First_name": "Hilde",
-    "Last_name": "Clashe",
-    "City": "Santa Ana",
-    "Country": "India"
-  },
-  {
-    "id": 6,
-    "First_name": "Tildi",
-    "Last_name": "Ollivierre",
-    "City": "Kedungwringin Satu",
-    "Country": "Australia"
-  },
-  {
-    "id": 1,
-    "First_name": "Alden",
-    "Last_name": "Held",
-    "City": "Qaţanah",
-    "Country": "Mexico"
-  },
-  {
-    "id": 4,
-    "First_name": "Daryle",
-    "Last_name": "Blanckley",
-    "City": "San Pedro de Ycuamandiyú",
-    "Country": "India"
-  },
-  {
-    "id": 3,
-    "First_name": "Brittaney",
-    "Last_name": "Alebrooke",
-    "City": "União da Vitória",
-    "Country": "Brazil"
-  },
-  {
-    "id": 2,
-    "First_name": "Abel",
-    "Last_name": "Barbie",
-    "City": "Riobamba",
-    "Country": "Europe"
-  },
-  {
-    "id": 7,
-    "First_name": "Alyssa",
-    "Last_name": "Quodling",
-    "City": "Banaran",
-    "Country": "Europe"
-  },
-  {
-    "id": 18,
-    "First_name": "Bobbee",
-    "Last_name": "Betteriss",
-    "City": "Xiaozhai",
-    "Country": "China"
-  },
-  {
-    "id": 19,
-    "First_name": "Helaina",
-    "Last_name": "Garner",
-    "City": "Lápas",
-    "Country": "Australia"
-  },
-  {
-    "id": 20,
-    "First_name": "Gail",
-    "Last_name": "Pirozzi",
-    "City": "Anau",
-    "Country": "French Polynesia"
-  },
-  {
-    "id": 11,
-    "First_name": "Iolande",
-    "Last_name": "Bowers",
-    "City": "Xiangzikou",
-    "Country": "China"
-  },
-  {
-    "id": 12,
-    "First_name": "Urbanus",
-    "Last_name": "Ciardo",
-    "City": "Rancabelut",
-    "Country": "Indonesia"
-  },
-  {
-    "id": 13,
-    "First_name": "Leonie",
-    "Last_name": "Beeble",
-    "City": "Ḩabīl ar Raydah",
-    "Country": "Spain"
-  },
-  {
-    "id": 14,
-    "First_name": "Lock",
-    "Last_name": "Baxill",
-    "City": "Bunutan",
-    "Country": "Indonesia"
-  },
-  {
-    "id": 5,
-    "First_name": "Filippo",
-    "Last_name": "Cowin",
-    "City": "Panitan",
-    "Country": "Philippines"
-  },
-  {
-    "id": 16,
-    "First_name": "Georg",
-    "Last_name": "Ashwell",
-    "City": "Lazaro Cardenas",
-    "Country": "Mexico"
-  },
-  {
-    "id": 17,
-    "First_name": "Horten",
-    "Last_name": "Grimsey",
-    "City": "Jingkou",
-    "Country": "China"
-  },
-  {
-    "id": 8,
-    "First_name": "Frants",
-    "Last_name": "Bilsborrow",
-    "City": "Sarrebourg",
-    "Country": "France"
-  },
-  {
-    "id": 9,
-    "First_name": "Lucien",
-    "Last_name": "Rhodes",
-    "City": "Zhongxiao",
-    "Country": "China"
-  },
-  {
-    "id": 10,
-    "First_name": "Kayle",
-    "Last_name": "Goodhew",
-    "City": "Boise",
-    "Country": "United States"
-  }
-  ]
+
 
   constructor(private httpclient: HttpClient) { }
   ngOnInit() {
-    // this.httpclient.get(" ../../assets/data.json").subscribe(data => {
-    //   var parsedData = [];
-    //   var resData = JSON.stringify(data);
-    //   parsedData = JSON.parse(resData);
-    //   //newdata = newdata.slice(0, 10)
-    //   this.totalData = parsedData;
-    //   let tdata = parsedData.map(item => {
-    //     return {
-    //       id: item.id,
-    //       First_name: item.First_name,
-    //       Last_name: item.Last_name,
-    //       City: item.City,
-    //       Country: item.Country
-    //     }
-    //   })
-    //   this.tableData = new MatTableDataSource(tdata);
-    //   this.tableData.sort = this.sort
-    // });
+    this.httpclient.get(" ../../assets/data.json").subscribe(data => {
+      var parsedData = [];
+      var resData = JSON.stringify(data);
+      parsedData = JSON.parse(resData);
+      //newdata = newdata.slice(0, 10)
+      this.totalData = parsedData;
+      let tdata = parsedData.map(item => {
+        return {
+          id: item.id,
+          First_name: item.First_name,
+          Last_name: item.Last_name,
+          City: item.City,
+          Country: item.Country
+        }
+      })
+      this.tableData = new MatTableDataSource(tdata);
+      this.tableData.sort = this.sort
+    });
 
-    let tdata = this.totalData.map(item => {
-      return {
-        id: item.id,
-        First_name: item.First_name,
-        Last_name: item.Last_name,
-        City: item.City,
-        Country: item.Country
-      }
-    })
-    this.tableData = new MatTableDataSource(tdata);
-    this.tableData.sort = this.sort
 
     var lsName = JSON.parse(sessionStorage.getItem("name"));
     var lsCountry = JSON.parse(sessionStorage.getItem("country"));
