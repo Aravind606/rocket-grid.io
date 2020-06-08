@@ -105,8 +105,8 @@ export class TableComponent implements OnInit {
   ];
   constructor(private httpclient: HttpClient) { }
   ngOnInit() {
-
-    this.httpclient.get("../../assets/data.json").subscribe(data => {
+    // ../../assets/data.json
+    this.httpclient.get(" ../../assets/data.json").subscribe(data => {
       var parsedData = [];
       var resData = JSON.stringify(data);
       parsedData = JSON.parse(resData);
