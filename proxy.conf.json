@@ -1,6 +1,0 @@
-{
-  "/api": {
-    "target": "./src/assets/data.json",
-    "secure": false
-  }
-}
