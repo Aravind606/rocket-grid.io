@@ -18,7 +18,8 @@ export class TableComponent implements OnInit {
   isShowDivIf = false;
   tnormal = true;
   tchange = false;
-  totalData;
+  tableValueSort;
+  tableValue;
   nameFilter = [{
     name: "Hilde",
     filtered: false
@@ -104,6 +105,34 @@ export class TableComponent implements OnInit {
   },
   ];
 
+  sortable = [
+    {
+      name: "id",
+      sortable: true,
+      sortType: "default"
+    },
+    {
+      name: "First_name",
+      sortable: true,
+      sortType: "default"
+    },
+    {
+      name: "Last_name",
+      sortable: false,
+      sortType: "default"
+    },
+    {
+      name: "City",
+      sortable: true,
+      sortType: "default"
+    },
+    {
+      name: "Country",
+      sortable: true,
+      sortType: "default"
+    }
+  ]
+
 
   constructor(private httpclient: HttpClient) { }
   ngOnInit() {
@@ -112,24 +141,28 @@ export class TableComponent implements OnInit {
       var resData = JSON.stringify(data);
       parsedData = JSON.parse(resData);
       //newdata = newdata.slice(0, 10)
-      this.totalData = parsedData;
-      let tdata = parsedData.map(item => {
-        return {
-          id: item.id,
-          First_name: item.First_name,
-          Last_name: item.Last_name,
-          City: item.City,
-          Country: item.Country
-        }
-      })
-      this.tableData = new MatTableDataSource(tdata);
-      this.tableData.sort = this.sort
+      var aryData = Array.from(parsedData)
+      this.tableValueSort = aryData;
+      this.tableValue = parsedData;
     });
-
+    setTimeout(() => {
+      this.tableCreation(this.sortable, this.tableValueSort);
+    }, 100)
 
     var lsName = JSON.parse(sessionStorage.getItem("name"));
     var lsCountry = JSON.parse(sessionStorage.getItem("country"));
-
+    var lsSortable = JSON.parse(sessionStorage.getItem("sortOrder"))
+    if (lsSortable.length > 0) {
+      this.sortable = lsSortable;
+      setTimeout(() => {
+        this.sortable = lsSortable;
+        this.sortable.forEach((item) => {
+          if (item.sortType != "default") {
+            this.sorting(item.name)
+          }
+        }, 100)
+      })
+    }
     if (lsName.length > 0 || lsCountry.length > 0) {
 
       this.isShowDivIf = !this.isShowDivIf;
@@ -152,14 +185,112 @@ export class TableComponent implements OnInit {
         })
         this.selectedName = lsName;
         this.selectedCountry = lsCountry;
-        this.filter(this.totalData, lsName, lsCountry)
-      }, 100);
-    }
-    else {
-      //this.saveFilterInLs()
+        this.filter(this.tableValue, lsName, lsCountry);
+      }, 200);
     }
 
+
+
+
+
   }
+
+  tableCreation(sortOpt, tdata) {
+    let data = tdata.map(item => {
+      return {
+        id: item.id,
+        First_name: item.First_name,
+        Last_name: item.Last_name,
+        City: item.City,
+        Country: item.Country
+      }
+    })
+    this.tableData = new MatTableDataSource(data);
+
+
+  }
+
+  sorting(colName) {
+    this.sortable.forEach((element) => {
+
+      if (element.name != colName) {
+        element.sortType = "default"
+      }
+      else {
+        if (element.sortType == "default") {
+          element.sortType = "asc"
+          this.sortColumn(colName, "asc")
+        }
+        else if (element.sortType == "asc") {
+          element.sortType = "desc";
+          this.sortColumn(colName, "desc")
+        }
+        else if (element.sortType == "desc") {
+          element.sortType = "default";
+          this.sortColumn(colName, "default")
+        }
+      }
+    })
+    sessionStorage.setItem("sortOrder", JSON.stringify(this.sortable));
+  }
+
+  sortColumn(colName, sort) {
+
+    if (sort == "asc") {
+      this.ascSort(colName)
+    }
+    else if (sort == "desc") {
+      this.descSort(colName)
+    }
+    else if (sort == "default") {
+      if (this.selectedName.length > 0 || this.selectedCountry.length > 0) {
+        this.filter(this.tableValueSort, this.selectedName, this.selectedCountry)
+      }
+      else {
+        this.tableCreation(this.sortable, this.tableValueSort)
+      }
+    }
+  }
+
+
+
+  ascSort(colName) {
+
+    console.log("asc", this.sortable)
+    function compare_item(a, b) {
+      if (a[colName] < b[colName]) {
+        return -1;
+
+      } else if (a[colName] > b[colName]) {
+        return 1;
+
+      } else {
+        return 0;
+      }
+    }
+
+    console.log(this.tableData.filteredData.sort(compare_item));
+    this.tableCreation(this.sortable, this.tableData.filteredData)
+
+  }
+  descSort(colName) {
+    function compare_item(a, b) {
+      if (a[colName] < b[colName]) {
+        return 1;
+
+      } else if (a[colName] > b[colName]) {
+        return -1;
+
+      } else {
+        return 0;
+      }
+    }
+
+    console.log(this.tableData.filteredData.sort(compare_item));
+    this.tableCreation(this.sortable, this.tableData.filteredData)
+
+  }
+
 
   toggleDisplayDivIf() {
     this.isShowDivIf = !this.isShowDivIf;
@@ -169,53 +300,50 @@ export class TableComponent implements OnInit {
 
   selectedName: any = [];
   selectedCountry: any = [];
-  filterName(e, colName) {
+  filterName(e) {
 
     if (e.target.checked) {
 
       this.selectedName.push({ "name": e.target.value, "filtered": e.target.checked })
       this.saveFilterInLs()
-      this.filter(this.totalData, this.selectedName, this.selectedCountry)
+      this.filter(this.tableValue, this.selectedName, this.selectedCountry)
 
     }
 
     else {
       var index = this.selectedName.findIndex(x => {
-        console.log(x, e.target.value)
         return x.name == e.target.value
       })
       this.selectedName.splice(index, 1);
       this.saveFilterInLs()
-      this.filter(this.totalData, this.selectedName, this.selectedCountry)
+      this.filter(this.tableValue, this.selectedName, this.selectedCountry)
     }
     if (this.selectedName.length == 0 && this.selectedCountry.length == 0) {
-      this.tableData = new MatTableDataSource(this.totalData);
+      this.tableData = new MatTableDataSource(this.tableValue);
       this.tableData.sort = this.sort
     }
 
   }
-  filterCountry(e, colName) {
+  filterCountry(e) {
 
     if (e.target.checked) {
       this.selectedCountry.push({ "name": e.target.value, "filtered": e.target.checked })
       this.saveFilterInLs()
-      this.filter(this.totalData, this.selectedName, this.selectedCountry)
+      this.filter(this.tableValue, this.selectedName, this.selectedCountry)
 
     }
 
     else {
 
       var index = this.selectedCountry.findIndex(x => {
-        console.log(x, e.target.value)
         return x.name == e.target.value
       })
       this.selectedCountry.splice(index, 1);
       this.saveFilterInLs()
-      this.filter(this.totalData, this.selectedName, this.selectedCountry)
+      this.filter(this.tableValue, this.selectedName, this.selectedCountry)
     }
     if (this.selectedName.length == 0 && this.selectedCountry.length == 0) {
-      this.tableData = new MatTableDataSource(this.totalData);
-      this.tableData.sort = this.sort
+      this.tableData = new MatTableDataSource(this.tableValue);
     }
   }
 
@@ -244,7 +372,6 @@ export class TableComponent implements OnInit {
       }
       else {
         var match = newaName.includes(name) || newCountry.includes(country);
-        //console.log(bo);
         if (match) {
           return item;
         }
